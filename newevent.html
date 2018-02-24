@@ -55,13 +55,13 @@
         var endTime= Date.parse(et2);
         var clubname=$("#clubnamef").val();
         var token = localStorage.getItem("token");
-        var prize1 = $("prize1").val();
-        var prize2 = $("prize2").val();
-        var prize3 = $("prize3").val();
-        var coord1name = $("coord1name").val();
-        var coord1phone = $("coord1phone").val();
-        var coord2name = $("coord2name").val();
-        var coord2phone = $("coord2phone").val();
+        var prize1 = $("#prize1").val();
+        var prize2 = $("#prize2").val();
+        var prize3 = $("#prize3").val();
+        var coord1name = $("#coord1name").val();
+        var coord1phone = $("#coord1phone").val();
+        var coord2name = $("#coord2name").val();
+        var coord2phone = $("#coord2phone").val();
         var data = {token:token,clubname:clubname,title:eventname,category:category,desc:description,rules:rules,venue:venue,fee:fee,from:startTime,to:endTime,eventtype:type,coord1name:coord1name,coord1phone:coord1phone,coord2name:coord2name,coord2phone:coord2phone,prize1:prize1,prize2:prize2,prize3:prize3};
         console.log(JSON.stringify(data));
          $.ajax({

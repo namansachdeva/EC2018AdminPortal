@@ -89,25 +89,44 @@
   {//$(document).getElementById("#reg").innerHTML=""; 
   //alert("ok");
 var eventlistname= $("#eventlist").val();
-//alert(eventlistname);
  for(var i=0; i<obj.data.length; i++)
           {
-              if(obj.data[i].title===eventlistname)
+          	  
+              if(obj.data[i].title==eventlistname)
               {
+              	console.log(obj);
                 var eventid=obj.data[i]._id;
                 var description=obj.data[i].desc;
                 var rules=obj.data[i].rules;
                 var venue=obj.data[i].venue;
                 var fee=obj.data[i].fee;
-                var st=obj.data[i].timing.from;
-                var et=obj.data[i].timing.to;
-                var type=obj.data[i].eventtype;
-                console.log(type);
+                var category =obj.data[i].category;
+                var st1=obj.data[i].timing.from;
+                var et1=obj.data[i].timing.to;
+                var st = new Date(st);
+                var et = new Date(et);
+                var eventtype=obj.data[i].eventtype;
+                var prize1 = obj.data[i].prizes.prize1;
+                var prize2 = obj.data[i].prizes.prize2;
+                var prize3 = obj.data[i].prizes.prize3;
+                var coord1name = obj.data[i].coordinators[0].name;
+                var coord1ph = obj.data[i].coordinators[0].phone;
+                var coord2name = obj.data[i].coordinators[1].name;
+                var coord2ph = obj.data[i].coordinators[1].phone;
+                if(coord1ph == "null"){
+                	coord1name = "";
+                	coord1ph = "0";
+                }
+                if(coord2ph == "null"){
+                	coord2name = "";
+                	coord2ph = "0";
+                }
+                // var coord1phone = valueOf(coord1ph);
+                // var coord2phone = valueOf(coord2ph);
                 break;
               }
           }
           $("#updateform").show();
-          document.getElementById("eventid").setAttribute('value',eventid);
            document.getElementById("eventname").setAttribute('value',eventlistname);
            document.getElementById("description").innerHTML=description;
            document.getElementById("rules").innerHTML=rules;
@@ -115,7 +134,16 @@ var eventlistname= $("#eventlist").val();
           document.getElementById("fee").setAttribute('value',fee);
            document.getElementById("st").setAttribute('value',st);
            document.getElementById("et").setAttribute('value',et);
-          document.getElementById("type").setAttribute('value',type);
+          document.getElementById("eventtype").setAttribute('value',eventtype);
+          document.getElementById("prize1").setAttribute('value',prize1);
+          document.getElementById("prize2").setAttribute('value',prize2);
+          document.getElementById("prize3").setAttribute('value',prize3);
+          document.getElementById("coord1phone").setAttribute('value',coord1phone);
+          document.getElementById("coord1name").setAttribute('value',coord1name);
+          document.getElementById("coord2phone").setAttribute('value',coord2phone);
+          document.getElementById("coord2name").setAttribute('value',coord2name);
+          document.getElementById("category").setAttribute('value',category);
+
 
 
 }
@@ -137,15 +165,12 @@ var clubname= $("#clubnamef").val();
           $("#wait").css("display","none");
           obj=JSON.parse(JSON.stringify(data));
           var eventn="";
-          for(var i=0; i<obj.data.length; i++)
-          {
-               eventn+='<option>' + obj.data[i].title+ '</option>';
+          for(var i=0; i<obj.data.length; i++) {
+              eventn+='<option>' + obj.data[i].title+ '</option>';
           }
           $("#eventl").show();
           $("#submit").show();
-           document.getElementById("eventlist").innerHTML=eventn;   
-
-
+          document.getElementById("eventlist").innerHTML=eventn;   
           //console.log(data);
         })
   
@@ -153,28 +178,36 @@ var clubname= $("#clubnamef").val();
 
 function updateinfo()
 {$("#wait").css("display","block");
-//alert(eventid);
-var description = $("#description").val();
-//alert(description);
-var rules=$("#rules").val();
-//alert(rules);
-var venue = $("#venue").val();
-var fee=$("#fee").val();
-var startTime= $("#st").val();
-
-var endTime= $("#et").val();
-//alert(endTime);
-var clubname=$("#clubnamef").val();
-//alert(clubname);
-var type = $("#type").val();
+var type = $("#eventtype").val();
+        var eventname= $("#eventname").val();
+        var category= $("#category").val();
+        var description = $("#description").val();
+        var rules=$("#rules").val();
+        var venue = $("#venue").val();
+        var fee= $("#fee").val();
+        var st1 = parseYMDHM($("#st").val());
+        var startTime= Date.parse(st1);
+        var et2 = parseYMDHM($("#et").val());
+        var endTime= Date.parse(et2);
+        var clubname=$("#clubnamef").val();
+        var token = localStorage.getItem("token");
+        var prize1 = $("prize1").val();
+        var prize2 = $("prize2").val();
+        var prize3 = $("prize3").val();
+        var coord1name = $("coord1name").val();
+        var coord1phone = $("coord1phone").val();
+        var coord2name = $("coord2name").val();
+        var coord2phone = $("coord2phone").val();
+        var data = {token:token,clubname:clubname,title:eventname,category:category,desc:description,rules:rules,venue:venue,fee:fee,from:startTime,to:endTime,eventtype:type,coord1name:coord1name,coord1phone:coord1phone,coord2name:coord2name,coord2phone:coord2phone,prize1:prize1,prize2:prize2,prize3:prize3};
+        console.log(JSON.stringify(data));
 
  $.ajax({
 
             type: "POST",
             crossDomain: true,
             dataType: 'json',
-            url: "http://elementsculmyca2018.herokuapp.com/api/v1/events/updateevent",
-            data: {clubname:clubname,desc:description,rules:rules,venue:venue,from:startTime,to:endTime,fee:fee, eventtype:type},
+            url: "https://elementsculmyca2018.herokuapp.com/api/v1/events/newevent",
+            data: data,
     success: function() { alert("Your data is updated correctly"); },
     error: function() { alert('Failed! Please Try Again'); }
 
@@ -338,67 +371,101 @@ function cancel()
                   </div>
                 </div>
                 <div id="wait" style="display:none;width:69px;height:89px;border:0px solid black;position:absolute;top:30%;left:50%;padding:2px;"><img src='loaderimage.gif' width="64" height="64" /><br>Loading..</div>
-      
-      </section>
-      <section id="updateform">
+            </section>
+            <section id="updateform">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="callout callout-info">
+                            <p>Enter the values in fields to create new event and press the submit button.</p>
+                            <p>To cancel the changes, press the cancel button.</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Type</label><br/>
+                            <select class="form-control" name="eventtype" id="eventtype">
+                  <option>solo</option>
+                  <option>team</option>
+                  <option>NA</option>
+                  </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Event Name</label>
+                            <input type="text" class="form-control" placeholder="Event Name" name="eventname" id="eventname">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control" name="category" id="category">
+                            <option>Cultural</option>
+                            <option>Technical</option>
+                            <option>Main Stage</option>
+                        </select>
+                        </div>
+                        <label>Event Description</label>
+                        <div class="form-group">
+                            <textarea rows="8" cols="80" id="description"></textarea>
+                        </div>
+                        <label>Rules</label>
+                        <div class="form-group">
+                            <textarea rows="8" cols="80" id="rules"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Venue</label>
+                            <input type="text" class="form-control" placeholder="Venue" name="venue" id="venue">
+                        </div>
+                        <div class="form-group">
+                            <label>Fee</label>
+                            <input type="text" class="form-control" placeholder="Fee" name="fee" id="fee">
+                        </div>
+                        <div class="form-group">
+                            <label>Start Time</label>
+                            <input type="datetime-local" class="form-control" placeholder="Start Time" name="st" id="st">
+                        </div>
+                        <div class="form-group">
+                            <label>End Time</label>
+                            <input type="datetime-local" class="form-control" placeholder="End Time" name="et" id="et">
+                        </div>
+                        <div class="form-group">
+                            <label>1st Prize</label>
+                            <input type="text" class="form-control" placeholder="1st Prize" name="prize1" id="prize1">
+                        </div>
+                        <div class="form-group">
+                            <label>2nd Prize</label>
+                            <input type="text" class="form-control" placeholder="2nd Prize" name="prize2" id="prize2">
+                        </div>
+                        <div class="form-group">
+                            <label>3rd Prize</label>
+                            <input type="text" class="form-control" placeholder="3rd Prize" name="prize3" id="prize3">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordinator 1</label>
+                            <input type="text" class="form-control" placeholder="Coordinator 1" name="coord1name" id="coord1name">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordinator 1 Number</label>
+                            <input type="number" class="form-control" placeholder="Coordinator 1 Number" name="coord1phone" id="coord1phone">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordinator 2</label>
+                            <input type="text" class="form-control" placeholder="Coordinator 2" name="coord2name" id="coord2name">
+                        </div>
+                        <div class="form-group">
+                            <label>Coordinator 2 Number</label>
+                            <input type="number" class="form-control" placeholder="Coordinator 2 Number" name="coord2phone" id="coord2phone">
+                        </div>
+                        <br/>
 
-        <div class="row">
-      <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="callout callout-info">
-          <p>Edit the fields you want to update and press the submit button.</p>
-          <p>To cancel the changes, press the cancel button.</p>
-        </div>
-            <div class="form-group">
-                  
-                  <input type="hidden" class="form-control" placeholder="Event ID" name="eventid" id="eventid">
-                </div>
-                  <div class="form-group">
-                   <label>Type (Enter one of the three values:-(team,individual,presentation))</label><br/>
-                  <input type="text" class="form-control" placeholder="Type" name="type" id="type">
-                </div>
-                <div class="form-group">
-                  <label>Event Name</label>
-                  <input type="text" class="form-control" placeholder="Event Name" name="eventname" id="eventname" readonly>
-                </div>
-                <label>Event Description</label>
-               <div class="form-group">
-                  <textarea rows="8" cols="80" id="description"></textarea>
-                </div>
-                <label>Rules</label>
-               <div class="form-group">
-                  <textarea rows="8" cols="80" id="rules"></textarea>
-                </div>
-                <div class="form-group">
-                  <label>Venue</label>
-                  <input type="text" class="form-control" placeholder="Venue" name="venue" id="venue">
-                </div>
-                <div class="form-group">
-                  <label>Fee</label>
-                  <input type="text" class="form-control" placeholder="Fee" name="fee" id="fee">
-                </div>
-                <div class="form-group">
-                  <label>Start Time (Format is :- dd/mm/yyyy hh:mm AM/PM)</label>
-                  <input type="text" class="form-control" placeholder="Start Time" name="st" id="st">
-                </div> 
-                 <div class="form-group">
-                  <label>End Time (Format is :- dd/mm/yyyy hh:mm AM/PM)</label>
-                  <input type="text" class="form-control" placeholder="End Time" name="et" id="et">
-                </div>        
-              <br />   
-            
-             
-                <button type="submit" class="btn btn-primary"  id="submit" onclick="updateinfo()">Submit</button>
-              
-                <button class="btn btn-primary"  id="cancel" onclick="cancel()">Cancel</button>
-              
+
+                        <button type="submit" class="btn btn-primary" id="submit" onclick="updateinfo()">Submit</button>
+
+                        <button class="btn btn-primary" id="cancel" onclick="cancel()">Cancel</button>
 
 
-        </div>
-      </div>
-      
-        
-      </section>
+
+                    </div>
+                </div>
+
+
+            </section>
         
       </div>
       <!-- /.row (main row) -->
