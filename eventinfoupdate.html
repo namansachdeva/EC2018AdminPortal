@@ -103,24 +103,29 @@ var eventlistname= $("#eventlist").val();
                 var category =obj.data[i].category;
                 var st1=obj.data[i].timing.from;
                 var et1=obj.data[i].timing.to;
-                var st = new Date(st);
-                var et = new Date(et);
+                var st = new Date(st1).toISOString();
+                var et = new Date(et1).toISOString();
+                var st = st.substr(0, 16);
+                var et = et.substr(0, 16);
                 var eventtype=obj.data[i].eventtype;
                 var prize1 = obj.data[i].prizes.prize1;
                 var prize2 = obj.data[i].prizes.prize2;
                 var prize3 = obj.data[i].prizes.prize3;
-                var coord1name = obj.data[i].coordinators[0].name;
-                var coord1ph = obj.data[i].coordinators[0].phone;
-                var coord2name = obj.data[i].coordinators[1].name;
-                var coord2ph = obj.data[i].coordinators[1].phone;
-                if(coord1ph == "null"){
-                	coord1name = "";
-                	coord1ph = "0";
+                if(obj.data[i].coordinators.hasOwnProperty('name')){
+                  var coord1name = obj.data[i].coordinators[0].name.toString();
+                  var coord1ph = obj.data[i].coordinators[0].phone.toString();
+                } else {
+                  var coord1name = "";
+                  var coord1ph = "0";
                 }
-                if(coord2ph == "null"){
-                	coord2name = "";
-                	coord2ph = "0";
+                if(obj.data[i].coordinators.hasOwnProperty('name')){
+                  var coord2name = obj.data[i].coordinators[1].name.toString();
+                  var coord2ph = obj.data[i].coordinators[1].phone.toString();
+                } else {
+                  var coord2name = "";
+                  var coord2ph = "0";
                 }
+                console.log(coord2ph);
                 // var coord1phone = valueOf(coord1ph);
                 // var coord2phone = valueOf(coord2ph);
                 break;
@@ -132,15 +137,15 @@ var eventlistname= $("#eventlist").val();
            document.getElementById("rules").innerHTML=rules;
            document.getElementById("venue").setAttribute('value',venue);
           document.getElementById("fee").setAttribute('value',fee);
-           document.getElementById("st").setAttribute('value',st);
-           document.getElementById("et").setAttribute('value',et);
+          document.getElementById("st").value = st;
+          document.getElementById("et").value = et;
           document.getElementById("eventtype").setAttribute('value',eventtype);
           document.getElementById("prize1").setAttribute('value',prize1);
           document.getElementById("prize2").setAttribute('value',prize2);
           document.getElementById("prize3").setAttribute('value',prize3);
-          document.getElementById("coord1phone").setAttribute('value',coord1phone);
+          document.getElementById("coord1phone").setAttribute('value',coord1ph);
           document.getElementById("coord1name").setAttribute('value',coord1name);
-          document.getElementById("coord2phone").setAttribute('value',coord2phone);
+          document.getElementById("coord2phone").setAttribute('value',coord2ph);
           document.getElementById("coord2name").setAttribute('value',coord2name);
           document.getElementById("category").setAttribute('value',category);
 
@@ -206,14 +211,14 @@ var type = $("#eventtype").val();
             type: "POST",
             crossDomain: true,
             dataType: 'json',
-            url: "https://elementsculmyca2018.herokuapp.com/api/v1/events/newevent",
+            url: "https://elementsculmyca2018.herokuapp.com/api/v1/events/updateevent",
             data: data,
     success: function() { alert("Your data is updated correctly"); },
     error: function() { alert('Failed! Please Try Again'); }
 
         }).done(function(data){
           $("#wait").css("display","none");
-            
+            console.log(data);
             $("#updateform").hide();
         })
 }

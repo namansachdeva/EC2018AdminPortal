@@ -63,6 +63,12 @@
         var coord2name = $("#coord2name").val();
         var coord2phone = $("#coord2phone").val();
         var data = {token:token,clubname:clubname,title:eventname,category:category,desc:description,rules:rules,venue:venue,fee:fee,from:startTime,to:endTime,eventtype:type,coord1name:coord1name,coord1phone:coord1phone,coord2name:coord2name,coord2phone:coord2phone,prize1:prize1,prize2:prize2,prize3:prize3};
+        if(coord2phone==0){
+        	data = {token:token,clubname:clubname,title:eventname,category:category,desc:description,rules:rules,venue:venue,fee:fee,from:startTime,to:endTime,eventtype:type,coord1name:coord1name,coord1phone:coord1phone,prize1:prize1,prize2:prize2,prize3:prize3};
+        }
+        if(coord1phone==0){
+        	data = {token:token,clubname:clubname,title:eventname,category:category,desc:description,rules:rules,venue:venue,fee:fee,from:startTime,to:endTime,eventtype:type,prize1:prize1,prize2:prize2,prize3:prize3};
+        }
         console.log(JSON.stringify(data));
          $.ajax({
                     type: "POST",
@@ -323,7 +329,7 @@
                         </div>
                         <div class="form-group">
                             <label>Coordinator 1 Number</label>
-                            <input type="number" class="form-control" placeholder="Coordinator 1 Number" name="coord1phone" id="coord1phone">
+                            <input type="number" class="form-control" placeholder="Coordinator 1 Number" name="coord1phone" id="coord1phone" value="0">
                         </div>
                         <div class="form-group">
                             <label>Coordinator 2</label>
@@ -331,7 +337,7 @@
                         </div>
                         <div class="form-group">
                             <label>Coordinator 2 Number</label>
-                            <input type="number" class="form-control" placeholder="Coordinator 2 Number" name="coord2phone" id="coord2phone">
+                            <input type="number" class="form-control" placeholder="Coordinator 2 Number" name="coord2phone" id="coord2phone" value="0">
                         </div>
                         <br/>
 
