@@ -103,8 +103,8 @@ var eventlistname= $("#eventlist").val();
                 var category =obj.data[i].category;
                 var st1=obj.data[i].timing.from;
                 var et1=obj.data[i].timing.to;
-                var st = new Date(st1).toISOString();
-                var et = new Date(et1).toISOString();
+                var st = new Date(st1+19800000).toISOString();
+                var et = new Date(et1+19800000).toISOString();
                 var st = st.substr(0, 16);
                 var et = et.substr(0, 16);
                 var eventtype=obj.data[i].eventtype;
@@ -139,7 +139,7 @@ var eventlistname= $("#eventlist").val();
           document.getElementById("fee").setAttribute('value',fee);
           document.getElementById("st").value = st;
           document.getElementById("et").value = et;
-          document.getElementById("eventtype").setAttribute('value',eventtype);
+          document.getElementById(eventtype+"opt").selected= "true";
           document.getElementById("prize1").setAttribute('value',prize1);
           document.getElementById("prize2").setAttribute('value',prize2);
           document.getElementById("prize3").setAttribute('value',prize3);
@@ -147,7 +147,10 @@ var eventlistname= $("#eventlist").val();
           document.getElementById("coord1name").setAttribute('value',coord1name);
           document.getElementById("coord2phone").setAttribute('value',coord2ph);
           document.getElementById("coord2name").setAttribute('value',coord2name);
-          document.getElementById("category").setAttribute('value',category);
+          if(category!="Main Stage")
+          	document.getElementById(category+"opt").selected = "true";
+          else
+          	document.getElementById(mainstageopt).selected = "true";
 
 
 
@@ -388,9 +391,9 @@ function cancel()
                         <div class="form-group">
                             <label>Type</label><br/>
                             <select class="form-control" name="eventtype" id="eventtype">
-                  <option>solo</option>
-                  <option>team</option>
-                  <option>NA</option>
+                  <option id="soloopt">solo</option>
+                  <option id="teamopt">team</option>
+                  <option id="NAopt">NA</option>
                   </select>
                         </div>
                         <div class="form-group">
@@ -400,9 +403,9 @@ function cancel()
                         <div class="form-group">
                             <label>Category</label>
                             <select class="form-control" name="category" id="category">
-                            <option>Cultural</option>
-                            <option>Technical</option>
-                            <option>Main Stage</option>
+                            <option id="Culturalopt">Cultural</option>
+                            <option id="Technicalopt">Technical</option>
+                            <option id="mainstageopt">Main Stage</option>
                         </select>
                         </div>
                         <label>Event Description</label>
